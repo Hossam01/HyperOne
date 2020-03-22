@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "333209941167",
+    "firebase_url": "https://hyperone-f1445.firebaseio.com",
+    "project_id": "hyperone-f1445",
+    "storage_bucket": "hyperone-f1445.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333209941167:android:036f67c5d485f8aa9f105a",
+        "android_client_info": {
+          "package_name": "com.example.hyperone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333209941167-cke5piehmh3o92mk9mhdrq7bh9kotnc5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hyperone",
+            "certificate_hash": "952ca1db910227422773985b2ee62a4ad0acc89a"
+          }
+        },
+        {
+          "client_id": "333209941167-28kotirqiccnnkihvfi6nko3e3034sb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3wdM65jKNkhC5ys9U9EyubSA3dspu5xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333209941167-28kotirqiccnnkihvfi6nko3e3034sb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
