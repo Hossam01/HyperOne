@@ -1,4 +1,4 @@
-package com.example.hyperone;
+package com.example.hyperone.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.hyperone.R;
+import com.example.hyperone.SpalshViewModle;
 import com.example.hyperone.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -17,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ActivityLoginBinding activityLoginBinding= DataBindingUtil.setContentView(this,R.layout.activity_login);
+        final ActivityLoginBinding activityLoginBinding= DataBindingUtil.setContentView(this, R.layout.activity_login);
         spalshViewModle= ViewModelProviders.of(this).get(SpalshViewModle.class);
 
         activityLoginBinding.setViewModel(spalshViewModle);
@@ -26,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding.loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spalshViewModle.validation(activityLoginBinding.emailedit.getText().toString(),activityLoginBinding.passedit.getText().toString(),getApplicationContext());
+                spalshViewModle.validation(activityLoginBinding.emailedit.getText().toString(),activityLoginBinding.passedit.getText().toString(),LoginActivity.this);
             }
         });
 

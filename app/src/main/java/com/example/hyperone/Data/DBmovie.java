@@ -1,10 +1,12 @@
-package com.example.hyperone;
+package com.example.hyperone.Data;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.hyperone.Model.User;
 
 import java.util.ArrayList;
 

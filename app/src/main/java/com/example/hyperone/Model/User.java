@@ -1,4 +1,4 @@
-package com.example.hyperone;
+package com.example.hyperone.Model;
 
 import android.os.Parcelable;
 
@@ -17,6 +17,7 @@ public class User implements Serializable {
     String email;
 
     @ColumnInfo(name = "password")
+    public
     String password;
 
     @ColumnInfo(name = "address")

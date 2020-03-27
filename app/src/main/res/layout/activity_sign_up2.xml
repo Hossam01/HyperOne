@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SignUpActivity">
+        tools:context=".View.SignUpActivity"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/image"
@@ -106,7 +107,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:clickable="true"
-            android:text="Don't have an account??Sign Up"
+            android:text="Already have account? Login"
             app:layout_constraintVertical_bias="0.870" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,52 +1,74 @@
-package com.example.hyperone;
+package com.example.hyperone.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
 
-import android.app.ProgressDialog;
-import android.database.Cursor;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.DropBoxManager;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.example.hyperone.databinding.ActivityLoginBinding;
+
+import com.example.hyperone.Data.DBmovie;
+import com.example.hyperone.R;
+import com.example.hyperone.Model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
 
-    SpalshViewModle spalshViewModle;
     ArrayList<User> arrayitems;
+    private StorageReference mStorageRef;
+    AdapterList adapter;
+    public TextView addresstxt,nametxt,passtxt,emailtxt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         ImageView imvQrCode = findViewById(R.id.imageView2);
         Button button=findViewById(R.id.button);
+        addresstxt=findViewById(R.id.address);
+        nametxt=findViewById(R.id.name);
+        passtxt=findViewById(R.id.password);
+        emailtxt=findViewById(R.id.email);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         arrayitems = new ArrayList<User>();
         DBmovie db = new DBmovie(getApplicationContext());
         arrayitems = db.select();
+
+       addresstxt.setText("Address"+arrayitems.get(0).getAddress());
+       nametxt.setText("Name"+arrayitems.get(0).getName());
+       passtxt.setText("Password"+arrayitems.get(0).getPassword());
+       emailtxt.setText("Email"+arrayitems.get(0).getEmail());
+
 
         Bitmap bitmap = null;
         try {
@@ -96,26 +118,42 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void exportEmailInCSV()  {
+    public void exportEmailInCSV() {
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
 
         arrayitems = new ArrayList<User>();
         DBmovie db = new DBmovie(getApplicationContext());
         arrayitems = db.select();
+        String path=Environment.getExternalStorageDirectory().getAbsolutePath() + "/hyperone" + ".csv";
 
-        String fileName = "hyperone.csv";
-
-            File file = new File(HomeActivity.this.getFilesDir(), "text");
+        try {
+            File file = new File(path.toString());
+            // if file doesnt exists, then create it
             if (!file.exists()) {
-                file.mkdir();
-            }
-            try {
-                File gpxfile = new File(file, "sample.csv");
-                FileWriter writer = new FileWriter(gpxfile);
-                writer.append(arrayitems.get(0).getName().toString()+""+arrayitems.get(0).getAddress().toString());
-                writer.flush();
-                writer.close();
-                Toast.makeText(HomeActivity.this, "Saved your text", Toast.LENGTH_LONG).show();
-            } catch (Exception e) { }
+                file.createNewFile();
+                file.mkdirs();
 
+            }
+
+            Log.i("D", Environment.getExternalStorageDirectory().getAbsolutePath() + "/hyperone" + ".csv");
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            for (int i = 0; i <= arrayitems.size(); i++) {
+                bw.write(  "Address:  "+arrayitems.get(i).getAddress()+",");
+                bw.write(  "name:  "+arrayitems.get(i).getName()+",");
+                bw.write(  "Email:  "+arrayitems.get(i).getEmail()+",");
+                bw.write(  "Password:  "+arrayitems.get(i).getPassword()+",");
+
+                bw.close();
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

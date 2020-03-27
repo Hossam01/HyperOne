@@ -1,11 +1,12 @@
-package com.example.hyperone;
+package com.example.hyperone.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+
+import com.example.hyperone.R;
+import com.example.hyperone.SpalshViewModle;
 
 public class SplashActivity extends AppCompatActivity {
 
