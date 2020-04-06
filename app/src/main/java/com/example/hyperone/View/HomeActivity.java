@@ -1,30 +1,27 @@
 package com.example.hyperone.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hyperone.Adapter.MyRecyclerViewAdapter;
 import com.example.hyperone.Data.DBmovie;
-import com.example.hyperone.R;
 import com.example.hyperone.Model.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.hyperone.Model.UserData;
+import com.example.hyperone.R;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -34,40 +31,59 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
 
 
     ArrayList<User> arrayitems;
+    public TextView addresstxt;
     private StorageReference mStorageRef;
-    AdapterList adapter;
-    public TextView addresstxt,nametxt,passtxt,emailtxt;
-
+    ArrayList<UserData> arrayList;
+    MyRecyclerViewAdapter adapter;
+    Button add;
+    LinearLayout linearLayout;
+    EditText editText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
 
-        ImageView imvQrCode = findViewById(R.id.imageView2);
+        final ImageView imvQrCode = findViewById(R.id.imageView2);
         Button button=findViewById(R.id.button);
-        addresstxt=findViewById(R.id.address);
-        nametxt=findViewById(R.id.name);
-        passtxt=findViewById(R.id.password);
-        emailtxt=findViewById(R.id.email);
-
+        addresstxt = findViewById(R.id.data);
+        add = findViewById(R.id.add);
+        editText = findViewById(R.id.textData);
+        linearLayout = findViewById(R.id.layout);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         arrayitems = new ArrayList<User>();
-        DBmovie db = new DBmovie(getApplicationContext());
+        arrayList = new ArrayList<UserData>();
+        final DBmovie db = new DBmovie(getApplicationContext());
         arrayitems = db.select();
+        RecyclerView recyclerView = findViewById(R.id.recycle);
+        recyclerView.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+        adapter = new MyRecyclerViewAdapter(HomeActivity.this, arrayList);
+        recyclerView.setAdapter(adapter);
 
-       addresstxt.setText("Address"+arrayitems.get(0).getAddress());
-       nametxt.setText("Name"+arrayitems.get(0).getName());
-       passtxt.setText("Password"+arrayitems.get(0).getPassword());
-       emailtxt.setText("Email"+arrayitems.get(0).getEmail());
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                db.insertUserData(editText.getText().toString(), arrayitems.get(0).getEmail());
+
+
+                arrayList = db.selectUserData(arrayitems.get(0).getEmail());
+
+
+                adapter.setList(arrayList);
+
+            }
+        });
+
 
 
         Bitmap bitmap = null;
@@ -82,6 +98,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 exportEmailInCSV();
+                imvQrCode.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.INVISIBLE);
+
             }
         });
 
@@ -92,7 +111,7 @@ public class HomeActivity extends AppCompatActivity {
     private Bitmap textToImage(String text, int width, int height) throws WriterException, NullPointerException {
         BitMatrix bitMatrix;
         try {
-            bitMatrix = new MultiFormatWriter().encode(text, BarcodeFormat.DATA_MATRIX.QR_CODE,
+            bitMatrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE,
                     width, height, null);
         } catch (IllegalArgumentException Illegalargumentexception) {
             return null;
@@ -129,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
         String path=Environment.getExternalStorageDirectory().getAbsolutePath() + "/hyperone" + ".csv";
 
         try {
-            File file = new File(path.toString());
+            File file = new File(path);
             // if file doesnt exists, then create it
             if (!file.exists()) {
                 file.createNewFile();
